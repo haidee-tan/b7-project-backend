@@ -6,11 +6,13 @@ const bodyParser = require("body-parser");
 const app = express();
 const port = 8000;
 
+const BeneficiaryRouter = require('./routes/beneficiaryRouter')
+
 mongoose.connect("mongodb://localhost/fighthungerdb");
 
 app.use(cors());
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => res.send("Hello world!"));
+app.use('/beneficiaries', BeneficiaryRouter)
 
 app.listen(port, () => console.log(`Listening on port ${port}!`));
