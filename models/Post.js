@@ -6,9 +6,7 @@ let PostSchema = new Schema({
     description: String,
     availability: Date,
     price: Number,
-    photos: [{
-        type: String,
-    }],
+    photo: String,
     quantity: Number,
     status: String,
     userId: Schema.Types.ObjectId,
