@@ -7,7 +7,7 @@ let PostSchema = new Schema({
     availability: Date,
     price: Number,
     photos: [{
-        type: String
+        type: String,
     }],
     quantity: Number,
     status: String,

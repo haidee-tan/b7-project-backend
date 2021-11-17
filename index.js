@@ -2,9 +2,6 @@ const express = require ("express");
 const mongoose = require ("mongoose");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const multer = require('multer')
-const multerPostConfig = require('./config/multerPostConfig')
-
 
 
 const app = express();
@@ -16,8 +13,6 @@ const DonationRouter = require('./routes/donationRouter')
 const PostRouter = require('./routes/postRouter')
 const TransactionRouter = require('./routes/transactionRouter')
 const UserRouter = require('./routes/userRouter')
-
-const Photo = require('./models/Photo')
 
 mongoose.connect("mongodb://localhost/fighthungerdb");
 
@@ -34,11 +29,11 @@ app.use('/transactions', TransactionRouter)
 app.use('/users', UserRouter)
 
 // FOR SAMPLE UPLOAD
-app.post('/upload', multer(multerPostConfig).single('img'), (req, res) => {
-    let photo = new Photo();
-    photo.image = req.file.filename
-    photo.save()
-    .then(photo => res.send(photo));
-})
+// app.post('/upload', multer(multerConfig).single('img'), (req, res) => {
+//     let photo = new Photo();
+//     photo.image = req.file.filename
+//     photo.save()
+//     .then(photo => res.send(photo));
+// })
 
 app.listen(port, () => console.log(`Listening on port ${port}!`));
