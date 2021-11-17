@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 let PostSchema = new Schema({
     name: String,
     description: String,
-    availableUntil: Date,
+    availability: Date,
     price: Number,
     photos: [{
         type: String

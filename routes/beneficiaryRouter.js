@@ -19,8 +19,10 @@ router.post("/", (req,res) => {
 
 router.put("/:id", (req,res) => {
     Beneficiary.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
-    .then(data => res.send(data))
+    .then(data => {res.send(data)
+    })
 })
+
 router.delete("/:id", (req,res) => {
     Beneficiary.findOneAndDelete({_id: req.params.id})
         .then( data => res.send(data))
