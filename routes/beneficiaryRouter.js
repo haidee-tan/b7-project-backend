@@ -1,14 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const Beneficiary = require('../models/Beneficiary');
+const { isAdmin } = require("../auth")
 
-router.get("/", (req,res) => {
+
+// 
+router.get("/user", isAdmin,(req,res) => {
     Beneficiary.find({})
     .then(beneficiary => 
         res.send(beneficiary)
         )
 })
 
+// 
 router.post("/", (req,res) => {
     let beneficiary = new Beneficiary(req.body);
     beneficiary.save()
@@ -17,13 +21,15 @@ router.post("/", (req,res) => {
     })
 })
 
-router.put("/:id", (req,res) => {
+// EDIT BENEFICIARY, ADMIN ONLY
+router.put("/edit/:id", isAdmin, (req,res) => {
     Beneficiary.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
     .then(data => {res.send(data)
     })
 })
 
-router.delete("/:id", (req,res) => {
+// DELETE BENEFICIARY, ADMIN ONLY
+router.delete("/delete/:id", isAdmin, (req,res) => {
     Beneficiary.findOneAndDelete({_id: req.params.id})
         .then( data => res.send(data))
 })
