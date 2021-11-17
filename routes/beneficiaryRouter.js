@@ -36,13 +36,15 @@ router.post("/", upload.single('img'), (req,res) => {
     })
 })
 
-router.put("/:id", (req,res) => {
+// EDIT BENEFICIARY, ADMIN ONLY
+router.put("/edit/:id", isAdmin, (req,res) => {
     Beneficiary.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
     .then(data => {res.send(data)
     })
 })
 
-router.delete("/:id", (req,res) => {
+// DELETE BENEFICIARY, ADMIN ONLY
+router.delete("/delete/:id", isAdmin, (req,res) => {
     Beneficiary.findOneAndDelete({_id: req.params.id})
         .then( data => res.send(data))
 })
