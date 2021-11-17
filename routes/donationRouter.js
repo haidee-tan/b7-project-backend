@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Donation = require('../models/Donation');
+const multer = require('multer')
 
 
 // MULTER CONFIG
