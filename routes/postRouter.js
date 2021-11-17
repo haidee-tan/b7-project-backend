@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Post = require('../models/Post');
+// const multerPostConfig = require('../config/multerPostConfig')
+// const multer = require('multer')
 
 router.get("/", (req,res) => {
     Post.find({})
@@ -9,7 +11,7 @@ router.get("/", (req,res) => {
         )
 })
 
-router.post("/", (req,res) => {
+router.post("/",(req,res) => {
     let post = new Post(req.body);
     post.save()
     .then ( post => {
