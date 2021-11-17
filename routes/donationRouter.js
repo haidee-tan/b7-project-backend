@@ -7,6 +7,7 @@ const multer = require('multer')
 // MULTER CONFIG
 // SET FOR MULTIPLE UPLOADS
 // CAN SAVE UPLOAD BUT THRU POSTMAN, ALL PROPS REFLECTED IN THE FE BUT NOW THE ACTUAL IMAGE  
+
 const multerStorage = multer.diskStorage({
     destination: (req, file, next) => {
         next(null, './public');
