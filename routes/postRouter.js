@@ -15,6 +15,7 @@ router.post("/", (req,res) => {
     .then ( post => {
         res.send(post)
     })
+    .catch(err => res.send(err))
 })
 
 router.put("/:id", (req,res) => {
