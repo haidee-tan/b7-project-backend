@@ -2,9 +2,12 @@ const mongoose = require ("mongoose");
 const Schema = mongoose.Schema;
 
 let DonationSchema = new Schema({
-    postId: Schema.Types.ObjectId,
     quantity: Number,
     fee: Number,
+    paymentMethod: String,
+    paymentNotes: String,
+    beneficiaryId: Schema.Types.ObjectId,
+    postId: Schema.Types.ObjectId,
     userId: Schema.Types.ObjectId,
     deliveryId: Schema.Types.ObjectId,
 }, {timestamps: true})

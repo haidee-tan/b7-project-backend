@@ -64,7 +64,13 @@ router.delete("/:id", isAdmin, (req,res) => {
     .then(user => res.send(user))
 })
 
-// sample token for admin user:
+module.exports = router;
+
+// sample token for admin user: user1@test.com
 // eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTkzNzQxZjVhOTkxNTg3MzJjMjA4NGIiLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InVzZXIxQHRlc3QuY29tIiwiaWF0IjoxNjM3MTI5MjIwfQ.WjuMgZJVNAa4CcbqtrzMND3y65dEiE1H1xv-qVIRLRM
 
-module.exports = router;
+// sample token for sponsor user: user2@test.com
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0OWU1Y2NmMmVlZjdjMzJmMjU2MjUiLCJyb2xlIjoic3BvbnNvciIsImVtYWlsIjoidXNlcjJAdGVzdC5jb20iLCJpYXQiOjE2MzcxMzQ0MTB9.ZgL8V6GoA3xZOa1qTEJAS_-YspxgK3cZjil5EbrPoqU
+
+// sample token for partner user: user3@test.com
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTk0OTc1MDYxOTliYzRlMzc4MDllNWMiLCJyb2xlIjoicGFydG5lciIsImVtYWlsIjoidXNlcjNAdGVzdC5jb20iLCJpYXQiOjE2MzcxMzUyNzV9.KmPNZZnRaDtVNUFViIH77yV4HknJjqnnrLAhGXfwgEU
