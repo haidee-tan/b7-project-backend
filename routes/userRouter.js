@@ -2,15 +2,9 @@ const express = require("express");
 const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require("bcrypt");
-const auth = require("../auth");
+const {createAccessToken, isAdmin} = require("../auth");
 
-router.get("/", (req,res) => {
-    User.find({})
-    .then(user => 
-        res.send(user)
-        )
-})
-
+// Sign up new user
 router.post("/signup", (req, res) => {
     const hash = bcrypt.hashSync(req.body.password, 10);
     let user = new User();
@@ -26,16 +20,51 @@ router.post("/signup", (req, res) => {
         role: user.role,
         status: user.status
     }))
-    .catch(() => res.send("email taken"))
+    .catch(err => res.send(err))
+});
+
+// Login user: needed email address and password only
+router.post("/login", (req, res) => {
+    console.log(req);
+    User.findOne({email: req.body.email})
+    .then(user => {
+        let match = bcrypt.compareSync(req.body.password, user.password);
+        match ?
+        res.send({
+            access: createAccessToken(user),
+            role: user.role,
+            email: user.email,
+            status: user.status
+        })
+        :
+        res.send("invalid credentials");
+    })
 })
 
-router.put("/:id", (req,res) => {
-    User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
-    .then(data => res.send(data))
+// Update user status: only admin role is authorized
+router.put("/:id", isAdmin, (req,res) => {
+    User.findOne({_id: req.params.id})
+    .then(user => {
+        user.status = req.body.status
+        user.save()
+        .then(() => res.send("success"))
+    })
+    .catch(() => res.send("cannot update"))
 })
-router.delete("/:id", (req,res) => {
+
+// Display all users
+router.get("/", isAdmin, (req, res) => {
+    User.find({})
+    .then(user => res.send(user))
+})
+
+// Delete user
+router.delete("/:id", isAdmin, (req,res) => {
     User.findOneAndDelete({_id: req.params.id})
-        .then( data => res.send(data))
+    .then(user => res.send(user))
 })
+
+// sample token for admin user:
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTkzNzQxZjVhOTkxNTg3MzJjMjA4NGIiLCJyb2xlIjoiYWRtaW4iLCJlbWFpbCI6InVzZXIxQHRlc3QuY29tIiwiaWF0IjoxNjM3MTI5MjIwfQ.WjuMgZJVNAa4CcbqtrzMND3y65dEiE1H1xv-qVIRLRM
 
 module.exports = router;
