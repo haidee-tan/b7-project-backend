@@ -14,12 +14,25 @@ router.get("/user", (req, res) => {
 
 // Display all donations, for admin only
 router.get("/all", isAdmin, (req, res) => {
-    Donation.find({})
-    .then(donation => res.send(donation))
+const multer = require('multer')
+
+// MULTER CONFIG
+// SET FOR MULTIPLE UPLOADS
+// CAN SAVE UPLOAD BUT THRU POSTMAN, ALL PROPS REFLECTED IN THE FE BUT NOW THE ACTUAL IMAGE  
+
+const multerStorage = multer.diskStorage({
+    destination: (req, file, next) => {
+        next(null, './public');
+    },
+    filename: (req, file, next) => {
+        const ext = file.mimetype.split('/')[1]
+        next(null, Date.now() + '.' + ext )
+    }
 })
+const upload = multer({ storage: multerStorage})
 
 // Create donation: req body should contain quantity beneficiaryId, paymentMethod, paymentNotes
-router.post("/create/post/:id/:beneficiaryId", canDonate, (req, res) => {
+router.post("/create/post/:id/:beneficiaryId", canDonate, upload.array('img', 5), (req, res) => {
     let userInfo = decodeToken(req.headers.authorization);
     let donation = new Donation(req.body);
     Post.findOne({_id: req.params.id})
