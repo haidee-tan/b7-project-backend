@@ -3,9 +3,6 @@ const router = express.Router();
 const Post = require('../models/Post');
 const multer = require('multer')
 
-// MULTER CONFIG
-// SET FOR MULTIPLE UPLOADS
-// CAN SAVE UPLOAD BUT THRU POSTMAN, ALL PROPS REFLECTED IN THE FE BUT NOW THE ACTUAL IMAGE  
 const multerStorage = multer.diskStorage({
         destination: (req, file, next) => {
             next(null, './public');
@@ -19,8 +16,7 @@ const multerStorage = multer.diskStorage({
 const upload = multer({ storage: multerStorage})
 
 
-
-router.get("/", upload.single('photo'), (req,res) => {
+router.get("/", (req,res) => {
     Post.find({})
     .then(post => 
         res.send(post)
@@ -45,7 +41,7 @@ router.post("/", upload.single('photo'), (req,res) => {
 })
 
 
-router.put("/:id", (req,res) => {
+router.put("/:id", upload.single('photo'), (req,res) => {
     Post.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
     .then(data => res.send(data))
 })
