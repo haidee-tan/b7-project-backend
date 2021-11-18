@@ -9,7 +9,6 @@ let DonationSchema = new Schema({
     beneficiaryId: Schema.Types.ObjectId,
     postId: Schema.Types.ObjectId,
     userId: Schema.Types.ObjectId,
-    deliveryId: Schema.Types.ObjectId,
 }, {timestamps: true})
 
 module.exports = mongoose.model("Donation", DonationSchema);
