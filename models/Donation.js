@@ -6,9 +6,18 @@ let DonationSchema = new Schema({
     fee: Number,
     paymentMethod: String,
     paymentNotes: String,
-    beneficiaryId: Schema.Types.ObjectId,
-    postId: Schema.Types.ObjectId,
-    userId: Schema.Types.ObjectId,
+    beneficiary: {
+        type: Schema.Types.ObjectId,
+        ref: "Beneficiary"
+    },
+    post: {
+        type: Schema.Types.ObjectId,
+        ref: "Post"
+    },
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
 }, {timestamps: true})
 
 module.exports = mongoose.model("Donation", DonationSchema);

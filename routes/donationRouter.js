@@ -8,13 +8,13 @@ const {canDonate, decodeToken, isAdmin} = require("../auth");
 // Display donations of the user
 router.get("/user", (req, res) => {
     let userInfo = decodeToken(req.headers.authorization);
-    Donation.find({userId: userInfo._id})
+    Donation.find({userId: userInfo._id}).populate("beneficiary").populate("post")/*.populate("user")*/
     .then(donation => res.send(donation))
 })
 
 // Display all donations, for admin only
-router.get("/all", isAdmin, (req, res) => {
-    Donation.find({})
+router.get("/all", /*isAdmin,*/ (req, res) => {
+    Donation.find({}).populate("beneficiary").populate("post")/*.populate("user")*/
     .then(donation => res.send(donation))
 })
 
@@ -48,9 +48,9 @@ router.post("/create/post/:id/:beneficiaryId", /*canDonate,*/ (req, res) => {
             post.quantity = 0;
         }
         donation.fee = donation.quantity * post.price;
-        donation.beneficiaryId = mongoose.Types.ObjectId(req.params.beneficiaryId);
-        donation.postId = mongoose.Types.ObjectId(req.params.id);
-        // donation.userId = mongoose.Types.ObjectId(userInfo._id);
+        donation.beneficiary = mongoose.Types.ObjectId(req.params.beneficiaryId);
+        donation.post = mongoose.Types.ObjectId(req.params.id);
+        // donation.user = mongoose.Types.ObjectId(userInfo._id);
         donation.save()
         .then(donation => {
             post.donations.push(donation._id);

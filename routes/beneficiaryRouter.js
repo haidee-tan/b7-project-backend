@@ -18,18 +18,18 @@ const multerStorage = multer.diskStorage({
 })
 const upload = multer({ storage: multerStorage})
 
-router.get("/", (req,res) => {
+router.get("/", (req, res) => {
     Beneficiary.find({})
-    .then(beneficiary => 
+    .then(beneficiary =>
         res.send(beneficiary)
-        )
+    )
 })
 
 // 
-router.post("/", isAdmin, upload.single('img'), (req,res) => {
+router.post("/", /*isAdmin,*/ upload.single('img'), (req,res) => {
     let beneficiary = new Beneficiary(req.body);
     beneficiary.save()
-    .then ( beneficiary => {
+    .then (beneficiary => {
         res.send(beneficiary)
     })
 })
