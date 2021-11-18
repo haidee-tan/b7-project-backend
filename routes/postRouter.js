@@ -26,14 +26,14 @@ router.get("/", upload.array('img', 5), (req,res) => {
         )
 })
 
-router.post("/", upload.array('img', 5), (req,res) => {
+router.post("/", upload.single('img'), (req,res) => {
     console.log(req.file) 
     let post = new Post(req.body);
     // post.name = req.body.name
     // post.description = req.body.description
     // post.availability = req.body.availability
     // post.price = req.body.price
-    // post.photos = req.body.photo
+    post.photo = req.file.filename
     // post.quantity = req.body.quantity
     // post.status = req.body.status
         post.save()
