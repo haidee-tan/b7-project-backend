@@ -8,10 +8,8 @@ const app = express();
 const port = 8000;
 
 const BeneficiaryRouter = require('./routes/beneficiaryRouter')
-const DeliveryRouter = require('./routes/deliveryRouter')
 const DonationRouter = require('./routes/donationRouter')
 const PostRouter = require('./routes/postRouter')
-const TransactionRouter = require('./routes/transactionRouter')
 const UserRouter = require('./routes/userRouter')
 
 mongoose.connect("mongodb://localhost/fighthungerdb");
@@ -22,10 +20,8 @@ app.use(express.static('public'));
 
 
 app.use('/beneficiaries', BeneficiaryRouter)
-app.use('/deliveries', DeliveryRouter)
 app.use('/donations', DonationRouter)
 app.use('/posts', PostRouter)
-app.use('/transactions', TransactionRouter)
 app.use('/users', UserRouter)
 
 // FOR SAMPLE UPLOAD

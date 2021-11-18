@@ -6,6 +6,10 @@ let PostSchema = new Schema({
     description: String,
     availability: Date,
     price: Number,
+    donations: [{
+        type: Schema.Types.ObjectId,
+        ref: "Donation"
+    }],
     photo: String,
     quantity: Number,
     status: String,

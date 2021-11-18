@@ -12,30 +12,32 @@ const multerStorage = multer.diskStorage({
         },
         filename: (req, file, next) => {
             const ext = file.mimetype.split('/')[1]
-            next(null, Date.now() + '.' + ext )
+            let random = (Math.random() + 1).toString(36).substring(2)
+            next(null, Date.now() + random + '.' + ext )
         }
     })
 const upload = multer({ storage: multerStorage})
 
 
 
-router.get("/", upload.array('img', 5), (req,res) => {
+router.get("/", upload.single('photo'), (req,res) => {
     Post.find({})
     .then(post => 
         res.send(post)
         )
 })
 
-router.post("/", upload.array('img', 5), (req,res) => {
-    console.log(req.file) 
-    let post = new Post(req.body);
-    // post.name = req.body.name
-    // post.description = req.body.description
-    // post.availability = req.body.availability
-    // post.price = req.body.price
-    // post.photos = req.body.photo
-    // post.quantity = req.body.quantity
-    // post.status = req.body.status
+router.post("/", upload.single('photo'), (req,res) => {
+    console.log(req.file)
+    console.log(req.body) 
+    let post = new Post();
+    post.name = req.body.name
+    post.description = req.body.description
+    post.availability = req.body.availability
+    post.price = req.body.price
+    post.photo = req.file.filename
+    post.quantity = req.body.quantity
+    post.status = req.body.status
         post.save()
         .then ( post => {
             res.send(post)
