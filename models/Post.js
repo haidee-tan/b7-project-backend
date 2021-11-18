@@ -9,6 +9,10 @@ let PostSchema = new Schema({
     photos: [{
         type: String
     }],
+    donations: [{
+        type: Schema.Types.ObjectId,
+        ref: "Donation"
+    }],
     quantity: Number,
     status: String,
     userId: Schema.Types.ObjectId,
