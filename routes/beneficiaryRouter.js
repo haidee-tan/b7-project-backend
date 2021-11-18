@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Beneficiary = require('../models/Beneficiary');
-const multer = require('multer')
+const multer = require('multer');
+const {isAdmin} = require("../auth");
 
 // MULTER CONFIG
 // SET FOR SINGLE UPLOAD

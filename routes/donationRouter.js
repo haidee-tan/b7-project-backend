@@ -14,12 +14,14 @@ router.get("/user", (req, res) => {
 
 // Display all donations, for admin only
 router.get("/all", isAdmin, (req, res) => {
-const multer = require('multer')
+    Donation.find({})
+    .then(donation => res.send(donation))
+})
 
 // MULTER CONFIG
 // SET FOR MULTIPLE UPLOADS
 // CAN SAVE UPLOAD BUT THRU POSTMAN, ALL PROPS REFLECTED IN THE FE BUT NOW THE ACTUAL IMAGE  
-
+const multer = require('multer');
 const multerStorage = multer.diskStorage({
     destination: (req, file, next) => {
         next(null, './public');
