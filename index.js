@@ -24,12 +24,4 @@ app.use('/donations', DonationRouter)
 app.use('/posts', PostRouter)
 app.use('/users', UserRouter)
 
-// FOR SAMPLE UPLOAD
-// app.post('/upload', multer(multerConfig).single('img'), (req, res) => {
-//     let photo = new Photo();
-//     photo.image = req.file.filename
-//     photo.save()
-//     .then(photo => res.send(photo));
-// })
-
 app.listen(port, () => console.log(`Listening on port ${port}!`));
