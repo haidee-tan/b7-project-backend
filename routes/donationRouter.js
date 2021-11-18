@@ -8,13 +8,13 @@ const {canDonate, decodeToken, isAdmin} = require("../auth");
 // Display donations of the user
 router.get("/user", (req, res) => {
     let userInfo = decodeToken(req.headers.authorization);
-    Donation.find({userId: userInfo._id})
+    Donation.find({userId: userInfo._id}).populate("beneficiary").populate("post")/*.populate("user")*/
     .then(donation => res.send(donation))
 })
 
 // Display all donations, for admin only
-router.get("/all", isAdmin, (req, res) => {
-    Donation.find({})
+router.get("/all", /*isAdmin,*/ (req, res) => {
+    Donation.find({}).populate("beneficiary").populate("post")/*.populate("user")*/
     .then(donation => res.send(donation))
 })
 
@@ -33,9 +33,10 @@ const multerStorage = multer.diskStorage({
 })
 const upload = multer({ storage: multerStorage})
 
-// Create donation: req body should contain quantity beneficiaryId, paymentMethod, paymentNotes
-router.post("/create/post/:id/:beneficiaryId", canDonate, upload.array('img', 5), (req, res) => {
-    let userInfo = decodeToken(req.headers.authorization);
+// Create donation: req body should contain quantity, paymentMethod, paymentNotes
+// once login is setup, bring back commented out items
+router.post("/create/post/:id/:beneficiaryId", /*canDonate,*/ (req, res) => {
+    // let userInfo = decodeToken(req.headers.authorization);
     let donation = new Donation(req.body);
     Post.findOne({_id: req.params.id})
     .then(post => {
@@ -47,17 +48,15 @@ router.post("/create/post/:id/:beneficiaryId", canDonate, upload.array('img', 5)
             post.quantity = 0;
         }
         donation.fee = donation.quantity * post.price;
-        donation.beneficiaryId = mongoose.Types.ObjectId(req.params.beneficiaryId);
-        donation.postId = mongoose.Types.ObjectId(req.params.id);
-        donation.userId = mongoose.Types.ObjectId(userInfo._id);
+        donation.beneficiary = mongoose.Types.ObjectId(req.params.beneficiaryId);
+        donation.post = mongoose.Types.ObjectId(req.params.id);
+        // donation.user = mongoose.Types.ObjectId(userInfo._id);
         donation.save()
         .then(donation => {
             post.donations.push(donation._id);
-            post.save();
-            res.send(donation)
+            post.save()
+            .then(post => res.send(post))
         })
-        // let targetDate = new Date();
-        // targetDate = targetDate.setDate(targetDate + 1); // assuming just 1 day delivery
     })
 })
 

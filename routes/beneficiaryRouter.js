@@ -19,11 +19,11 @@ const multerStorage = multer.diskStorage({
 })
 const upload = multer({ storage: multerStorage})
 
-router.get("/", (req,res) => {
+router.get("/", (req, res) => {
     Beneficiary.find({})
-    .then(beneficiary => 
+    .then(beneficiary =>
         res.send(beneficiary)
-        )
+    )
 })
 
 router.post("/", upload.single('photo'), (req,res) => {
@@ -35,7 +35,7 @@ router.post("/", upload.single('photo'), (req,res) => {
     beneficiary.website = req.body.website
     beneficiary.photo = req.file.filename
     beneficiary.save()
-    .then ( beneficiary => {
+    .then (beneficiary => {
         res.send(beneficiary)
     })
 })
