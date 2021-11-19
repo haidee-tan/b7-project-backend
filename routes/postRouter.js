@@ -19,7 +19,7 @@ const multerStorage = multer.diskStorage({
 const upload = multer({ storage: multerStorage})
 
 router.get("/", (req, res) => {
-    Post.find({})
+    Post.find({status: "active"})
     .then(posts => res.send(posts))
 })
 
@@ -40,12 +40,17 @@ router.post("/", upload.single('photo'), (req, res) => {
     });
 })
 
-router.put("/:id", upload.single('photo'), (req,res) => {
-    Post.findOneAndUpdate({_id: req.params.id}, req.body, {new: true})
-    .then(data => res.send(data))
+// admin: only status can be edited
+router.put("/:id", isAdmin, (req,res) => {
+    Post.findOne({_id: req.params.id})
+    .then(post => {
+        post.status = req.body.status
+        post.save()
+        .then(post => res.send(post))
+    })
 })
 
-router.delete("/:id", (req,res) => {
+router.delete("/:id", isAdmin, (req,res) => {
     Donation.deleteMany({post: req.params.id})
     .then(() => {
         Post.findOneAndDelete({_id: req.params.id})

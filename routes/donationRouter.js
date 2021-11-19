@@ -10,7 +10,6 @@ router.get("/", (req, res) => {
     let userInfo = decodeToken(req.headers.authorization);
     Donation.find({user: userInfo._id}).populate("beneficiary").populate("post")
     .then(donations => {
-        console.log(donations)
         res.send(donations)
     })
 })
