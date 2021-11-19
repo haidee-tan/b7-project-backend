@@ -20,7 +20,7 @@ const multerStorage = multer.diskStorage({
 const upload = multer({ storage: multerStorage})
 
 router.get("/", (req, res) => {
-    Beneficiary.find({})
+    Beneficiary.find({status: "active"})
     .then(beneficiary =>
         res.send(beneficiary)
     )
@@ -35,6 +35,7 @@ router.post("/", isAdmin, upload.single('photo'), (req,res) => {
     beneficiary.description = req.body.description
     beneficiary.website = req.body.website
     beneficiary.photo = req.file.filename
+    beneficiary.status = "active"
     beneficiary.save()
     .then (beneficiary => {
         res.send(beneficiary)
@@ -50,6 +51,7 @@ router.put("/:id", isAdmin, upload.single('photo'), (req,res) => {
         beneficiary.description = req.body.description
         beneficiary.website = req.body.website
         beneficiary.photo = req.file.filename
+        beneficiary.status = req.body.status
         beneficiary.save()
         .then (beneficiary => {
             res.send(beneficiary)
@@ -57,8 +59,12 @@ router.put("/:id", isAdmin, upload.single('photo'), (req,res) => {
     })
 })
 router.delete("/delete/:id", isAdmin, (req,res) => {
-    Beneficiary.findOneAndDelete({_id: req.params.id})
-        .then( data => res.send(data))
+    Beneficiary.findOne({_id: req.params.id})
+    .then(beneficiary => {
+        beneficiary.status = "inactive"
+        beneficiary.save()
+        .then(beneficiary => res.send(beneficiary))
+    })
 })
 
 module.exports = router;
