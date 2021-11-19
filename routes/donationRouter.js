@@ -6,14 +6,17 @@ const Post = require('../models/Post');
 const {canDonate, decodeToken, isAdmin} = require("../auth");
 
 // Display donations of the user
-router.get("/user", (req, res) => {
+router.get("/", (req, res) => {
     let userInfo = decodeToken(req.headers.authorization);
-    Donation.find({userId: userInfo._id}).populate("beneficiary").populate("post")/*.populate("user")*/
-    .then(donation => res.send(donation))
+    Donation.find({user: userInfo._id}).populate("beneficiary").populate("post")
+    .then(donations => {
+        console.log(donations)
+        res.send(donations)
+    })
 })
 
 // Display all donations, for admin only
-router.get("/all", /*isAdmin,*/ (req, res) => {
+router.get("/all", isAdmin, (req, res) => {
     Donation.find({}).populate("beneficiary").populate("post")/*.populate("user")*/
     .then(donation => res.send(donation))
 })
@@ -35,8 +38,8 @@ const upload = multer({ storage: multerStorage})
 
 // Create donation: req body should contain quantity, paymentMethod, paymentNotes
 // once login is setup, bring back commented out items
-router.post("/create/post/:id/:beneficiaryId", /*canDonate,*/ (req, res) => {
-    // let userInfo = decodeToken(req.headers.authorization);
+router.post("/create/post/:id/:beneficiaryId", canDonate, (req, res) => {
+    let userInfo = decodeToken(req.headers.authorization);
     let donation = new Donation(req.body);
     Post.findOne({_id: req.params.id})
     .then(post => {
@@ -50,7 +53,7 @@ router.post("/create/post/:id/:beneficiaryId", /*canDonate,*/ (req, res) => {
         donation.fee = donation.quantity * post.price;
         donation.beneficiary = mongoose.Types.ObjectId(req.params.beneficiaryId);
         donation.post = mongoose.Types.ObjectId(req.params.id);
-        // donation.user = mongoose.Types.ObjectId(userInfo._id);
+        donation.user = mongoose.Types.ObjectId(userInfo._id);
         donation.save()
         .then(donation => {
             post.donations.push(donation._id);
@@ -64,14 +67,15 @@ router.post("/create/post/:id/:beneficiaryId", /*canDonate,*/ (req, res) => {
 router.delete("/delete/:id", isAdmin, (req,res) => {
     Donation.findOne({_id: req.params.id})
     .then(donation => {
-        Post.findOne({_id: donation.postId})
+        Post.findOne({_id: donation.post})
         .then(post => {
             post.quantity = post.quantity + donation.quantity;
             post.donations.splice(post.donations.indexOf(donation._id) , 1);
             post.save()
             .then(post => {
+                let id = donation._id
                 donation.delete();
-                res.send("deleted");
+                res.send(id);
             });
         });
     });

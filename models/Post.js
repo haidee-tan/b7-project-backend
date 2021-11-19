@@ -13,7 +13,10 @@ let PostSchema = new Schema({
     photo: String,
     quantity: Number,
     status: String,
-    userId: Schema.Types.ObjectId,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    },
 }, {timestamps: true})
 
 module.exports = mongoose.model("Post", PostSchema);
