@@ -17,7 +17,9 @@ router.post("/signup", (req, res) => {
     user.save()
     .then(user => res.send({
         access: auth.createAccessToken(user),
+        firstName: user.firstName,
         role: user.role,
+        email: user.email,
         status: user.status
     }))
     .catch(err => res.send(err))
@@ -25,13 +27,13 @@ router.post("/signup", (req, res) => {
 
 // Login user: needed email address and password only
 router.post("/login", (req, res) => {
-    console.log(req);
     User.findOne({email: req.body.email})
     .then(user => {
         let match = bcrypt.compareSync(req.body.password, user.password);
         match ?
         res.send({
             access: createAccessToken(user),
+            firstName: user.firstName,
             role: user.role,
             email: user.email,
             status: user.status
@@ -39,6 +41,7 @@ router.post("/login", (req, res) => {
         :
         res.send("invalid credentials");
     })
+    .catch(() => res.send("invalid credentials"))
 })
 
 // Update user status: only admin role is authorized

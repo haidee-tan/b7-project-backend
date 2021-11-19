@@ -6,6 +6,7 @@ const createAccessToken = user => {
         _id: user._id,
         role: user.role,
         email: user.email,
+        status: user.status
     }
     return jwt.sign(userCopy, secretKey)
 };
