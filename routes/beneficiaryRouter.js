@@ -42,7 +42,6 @@ router.post("/", isAdmin, upload.single('photo'), (req,res) => {
     })
 })
 router.put("/:id", isAdmin, upload.single('photo'), (req,res) => {
-    console.log(req.body)
     Beneficiary.findOne({_id: req.params.id})
     .then(beneficiary => {
         beneficiary.name = req.body.name

@@ -15,13 +15,15 @@ router.post("/signup", (req, res) => {
     user.password = hash;
     user.status = req.body.status;
     user.save()
-    .then(user => res.send({
-        access: auth.createAccessToken(user),
-        firstName: user.firstName,
-        role: user.role,
-        email: user.email,
-        status: user.status
-    }))
+    .then(user => {
+        res.send({
+            access: createAccessToken(user),
+            firstName: user.firstName,
+            role: user.role,
+            email: user.email,
+            status: user.status
+        })
+    })
     .catch(err => res.send(err))
 });
 

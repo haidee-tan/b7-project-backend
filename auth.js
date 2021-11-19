@@ -59,10 +59,11 @@ const canPost = (req, res, next) => {
     let token = req.headers.authorization;
     if (token) {
         jwt.verify(token, secretKey, (err, data) => {
+            console.log(data.role)
             if(err) {
                 res.send({auth: "cannot find token"});
             }
-            if(data.role !== "sponsor") {
+            if(data.role !== "partner") {
                 res.send({auth: "not authorized to post"})
             }
             next();
