@@ -55,9 +55,28 @@ const canDonate = (req, res, next) => {
     };
 }
 
+const canPost = (req, res, next) => {
+    let token = req.headers.authorization;
+    if (token) {
+        jwt.verify(token, secretKey, (err, data) => {
+            if(err) {
+                res.send({auth: "cannot find token"});
+            }
+            if(data.role !== "sponsor") {
+                res.send({auth: "not authorized to post"})
+            }
+            next();
+        });
+    }
+    else {
+        res.send({auth: "no token"});
+    };
+}
+
 module.exports = {
     createAccessToken,
     decodeToken,
     isAdmin,
-    canDonate
+    canDonate,
+    canPost
 }
