@@ -3,7 +3,7 @@ const router = express.Router();
 const Post = require('../models/Post');
 const Donation = require('../models/Donation');
 const multer = require('multer')
-const {canDonate, decodeToken, isAdmin} = require("../auth");
+const {canDonate, decodeToken, isAdmin, canPost} = require("../auth");
 const mongoose = require("mongoose");
 
 const multerStorage = multer.diskStorage({
@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
     .then(posts => res.send(posts))
 })
 
-router.post("/", upload.single('photo'), (req, res) => {
+router.post("/", canPost, upload.single('photo'), (req, res) => {
     let userInfo = decodeToken(req.headers.authorization); 
     let post = new Post();
     post.name = req.body.name
