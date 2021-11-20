@@ -20,7 +20,7 @@ const multerStorage = multer.diskStorage({
 const upload = multer({ storage: multerStorage})
 
 router.get("/", (req, res) => {
-    Beneficiary.find({status: "active"})
+    Beneficiary.find({status: "active"}).sort({createdAt: -1})
     .then(beneficiary =>
         res.send(beneficiary)
     )
