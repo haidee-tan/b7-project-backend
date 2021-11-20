@@ -8,7 +8,7 @@ const {canDonate, decodeToken, isAdmin} = require("../auth");
 // Display donations of the user
 router.get("/", (req, res) => {
     let userInfo = decodeToken(req.headers.authorization);
-    Donation.find({user: userInfo._id}).populate("beneficiary").populate("post")
+    Donation.find({user: userInfo._id}).sort({createdAt: -1}).populate("beneficiary").populate("post")
     .then(donations => {
         res.send(donations)
     })
